@@ -14,7 +14,7 @@ def do_connect():
         sta_if.connect(secrets.WIFI_SSID, secrets.WIFI_PASS)
         while not sta_if.isconnected():
             pass
-    print('network config:', sta_if.ifconfig()
+    print('network config:', sta_if.ifconfig())
 
 
 def cycle(np):
