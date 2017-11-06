@@ -17,6 +17,7 @@ def do_connect():
     print('network config:', sta_if.ifconfig())
 
 
+# cycle one LED around the circle
 def cycle(np):
     n = np.n
     for i in range(4 * n):
@@ -40,6 +41,7 @@ def bounce_blue(np):
         time.sleep_ms(60)
 
 
+# all the LEDs make a brighter/dimmer red with fad effect
 def fade_red(np):
     n = np.n
     for i in range(0, 4 * 256, 8):
@@ -53,7 +55,7 @@ def fade_red(np):
 
 
 # Turn off all the LEDs
-def clear(np):
+def off(np):
     n = np.n
     for i in range(n):
         np[i] = (0, 0, 0)
@@ -69,22 +71,30 @@ def fire(np, red=(240, 0, 0), orange=(240, 120, 0)):
             np[i] = orange
     np.write()
 
+
+# Calculate an orange based on the max and current brightness
 def calc_orange(max_bright, current):
     return (max_bright - current, (max_bright - current) // 2 + 1, 0)
+
 
 def flame(np):
     max_brightness = 120
     for f in range(4, max_brightness):
+        # Start with bright orange and dim red
         red = (f, 0, 0)
         orange = calc_orange(max_brightness, f)
-        # After this, the orange ones are dim and the red ones are bright
         fire(np, red, orange)
     for f in range(max_brightness, 4, -1):
+        # Now orange LEDs are dim and the red ones are bright, so switch:
         red = (f, 0, 0)
         orange = calc_orange(max_brightness, f)
         fire(np, red, orange)
 
+
 if __name__ == '__main__':
     # Data line is on pin 13
-    # and there are 12 LEDs
+    # and there are 12 LEDs on our NeoPixel ring
     np = neopixel.NeoPixel(machine.Pin(13), 12)
+    do_connect()
+    # at this point we should start a cycle of colors
+    # and also start listening for any webrepl or api commands
